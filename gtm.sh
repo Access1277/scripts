@@ -7,7 +7,10 @@
 ## Your DNSTT Nameserver & your Domain `A` Record
 A='myudp.elcavlaw.com'
 NS='sdns.myudp.elcavlaw.com'
-## Repeat dig cmd loop time (seconds) (positive interger only)
+A1='art1.bagito.tech'
+NS1='sdns.art1.bagito.tech'
+
+## Repeat dig cmd loop time (seconds) (positive integer only)
 LOOP_DELAY=5
 
 ## Add your DNS here
@@ -19,55 +22,57 @@ DIG_EXEC="DEFAULT"
 ## if set to CUSTOM, enter your custom dig executable path here
 CUSTOM_DIG=/data/data/com.termux/files/home/go/bin/fastdig
 
-######################################
-######################################
-######################################
-######################################
-######################################
-VER=0.1
+_VER=0.1
 case "${DIG_EXEC}" in
- DEFAULT|D)
- _DIG="$(command -v dig)"
- ;;
- CUSTOM|C)
- _DIG="${CUSTOM_DIG}"
- ;;
+  DEFAULT|D)
+  _DIG="$(command -v dig)"
+  ;;
+  CUSTOM|C)
+  _DIG="${CUSTOM_DIG}"
+  ;;
 esac
-if [ ! $(command -v ${_DIG}) ]; then
- printf "%b" "Dig command failed to run, " \
- "please install dig(dnsutils) or check " \
- "\$DIG_EXEC & \$CUSTOM_DIG variable inside $( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/$(basename "$0") file.\n" && exit 1
+
+if [ ! -x "$_DIG" ]; then
+  printf "Dig command failed to run, please install dig(dnsutils) or check \$DIG_EXEC & \$CUSTOM_DIG variable inside %s/%s file.\n" "$(cd -- "$(dirname "$0")" >/dev/null 2>&1; pwd -P)" "$(basename "$0")" && exit 1
 fi
-endscript() {
- unset NS A LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
- exit 1
-}
-trap endscript 2 15
-check(){
- for ((i=0; i<"${#HOSTS[*]}"; i++)); do
-  for R in "${A}" "${NS}" "${A1}" "${NS1}"; do
-   T="${HOSTS[$i]}"
-   [[ -z $(timeout -k 3 3 ${_DIG} @${T} ${R}) ]] && M=31 || M=32;
-   echo -e "\e[1;${M}m\$ R:${R} D:${T}\e[0m"
-   unset T R M
+
+check() {
+  for T in "${HOSTS[@]}"; do
+    for R in "$A" "$NS" "$A1" "$NS1"; do
+      if timeout -k 3 3 "$_DIG" "@$T" "$R" &> /dev/null; then
+        M=32
+      else
+        M=31
+      fi
+      echo -e "\e[1;${M}m\$ R:$R D:$T\e[0m"
+    done
   done
- done
 }
+
+endscript() {
+  unset A NS A1 NS1 LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
+  exit 1
+}
+
+trap endscript 2 15
+
 echo "DNSTT Keep-Alive script <Lantin Nohanih>"
 echo -e "DNS List: [\e[1;34m${HOSTS[*]}\e[0m]"
 echo "CTRL + C to close script"
-[[ "${LOOP_DELAY}" -eq 1 ]] && let "LOOP_DELAY++";
+
+[[ "$LOOP_DELAY" -eq 1 ]] && ((LOOP_DELAY++))
 case "${@}" in
- loop|l)
- echo "Script loop: ${LOOP_DELAY} seconds"
- while true; do
-  check
-  echo '.--. .-.. . .- ... .     .-- .- .. -'
-  sleep ${LOOP_DELAY}
- done
- ;;
- *)
- check
- ;;
+  loop|l)
+    echo "Script loop: ${LOOP_DELAY} seconds"
+    while true; do
+      check
+      echo '.--. .-.. . .- ... .     .-- .- .. -'
+      sleep "$LOOP_DELAY"
+    done
+    ;;
+  *)
+    check
+    ;;
 esac
+
 exit 0
