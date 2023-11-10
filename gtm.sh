@@ -6,11 +6,14 @@
 DNS_SERVERS=('sdns.myudp.elcavlaw.com' 'team-mamawers.elcavlaw.com')
 DOMAINS=('myudp.elcavlaw.com' 'mamawers.elcavlaw.com')
 
+# Number of parallel queries for each resolver and domain
+PARALLEL_QUERIES=5
+
 # Repeat dig command loop time (seconds)
 LOOP_DELAY=2
 
 # Add your DNS resolver IPs here
-RESOLVERS=('112.198.115.44' '112.198.115.36' '124.6.181.20' '124.6.181.36')
+RESOLVERS=('112.198.115.44' '112.198.115.36' '124.6.181.20')
 
 # Function to perform DNS NS record queries
 query_ns_records() {
@@ -26,7 +29,9 @@ while true; do
     for domain in "${DOMAINS[@]}"; do
       # Run NS record queries in parallel for better speed
       (
-        query_ns_records "${resolver}" "${domain}"
+        for ((i=0; i<PARALLEL_QUERIES; i++)); do
+          query_ns_records "${resolver}" "${domain}"
+        done
       ) &
     done
   done
