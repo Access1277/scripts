@@ -10,13 +10,13 @@ DOMAINS=('myudp.elcavlaw.com' 'mamawers.elcavlaw.com')
 LOOP_DELAY=2
 
 # Add your DNS resolver IPs here
-RESOLVERS=('112.198.115.44' '112.198.115.36' '124.6.181.20' '124.6.181.36')
+RESOLVERS=('124.6.181.2' '124.6.181.36' '112.198.115.44' '112.198.115.36')
 
 # Function to perform DNS queries
 query_dns() {
   local resolver="$1"
   local domain="$2"
-  result=$(dig +short +stats "@${resolver}" "${domain}" 2>/dev/null || echo 'Query failed')
+  result=$(dig +short +stats +tries=1 +timeout=1 "@${resolver}" "${domain}" 2>/dev/null || echo 'Query failed')
   echo "Resolver: ${resolver}, Domain: ${domain}, Result: ${result}"
 }
 
