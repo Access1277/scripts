@@ -7,14 +7,14 @@
 # Your DNSTT Nameserver & your Domain `A` Record
 A='myudp.elcavlaw.com'
 NS='sdns.myudp.elcavlaw.com'
-A1='art1.bagito.tech'
-NS1='sdns.art1.bagito.tech'
+A1='mamawers.elcavlaw.com'
+NS1='team-mamawers.elcavlaw.com'
 
 # Repeat dig command loop time (seconds) (positive integer only)
 LOOP_DELAY=5
 
 # Add your DNS here
-declare -a HOSTS=('124.6.181.20')
+declare -a HOSTS=('124.6.181.20' '112.198.115.44')
 
 # Linux' dig command executable filepath
 # Select value: "CUSTOM|C" or "DEFAULT|D"
