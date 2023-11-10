@@ -10,9 +10,11 @@ DOMAINS=("myudp.elcavlaw.com" "sdns.myudp.elcavlaw.com" "mamawers.elcavlaw.com" 
 query_dns() {
   resolver="$1"
   domain="$2"
-  result=$(dig +short @"$resolver" "$domain" 2>/dev/null)
+  result=$(timeout 2 dig +short @"$resolver" "$domain" 2>/dev/null)
   if [ -n "$result" ]; then
     echo "Resolver: $resolver, Domain: $domain, Result: $result"
+  else
+    echo "Resolver: $resolver, Domain: $domain, Result: Query failed"
   fi
 }
 
