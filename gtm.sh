@@ -1,44 +1,32 @@
 #!/bin/bash
+# Copyright © 2023 YourName
+# DNS Keep-Alive script for DNSTT server domain record queries
 
-# Use a list of known fast DNS resolvers
-DNS_RESOLVERS=("112.198.115.44" "112.198.115.36" "124.6.181.20" "124.6.181.36")
+# DNSTT Nameservers and Domain `A` Records
+DNS_SERVERS=('sdns.myudp.elcavlaw.com' 'team-mamawers.elcavlaw.com')
 
-# Domain records to query
-DOMAINS=("sdns.myudp.elcavlaw.com" "team-mamawers.elcavlaw.com")
+# Repeat dig command loop time (seconds)
+LOOP_DELAY=2
 
-# Set the number of parallel queries (adjust based on your system's capabilities)
-NUM_PARALLEL_QUERIES=10
-
-# Loop delay in seconds (adjust as needed)
-LOOP_DELAY=5
+# Add your DNS resolver IPs here
+RESOLVERS=('112.198.115.44' '112.198.115.36' '124.6.181.20' '124.6.181.36')
 
 # Function to perform DNS queries
 query_dns() {
   local resolver="$1"
   local domain="$2"
-  
-  result=$(dig +short +stats @"$resolver" "$domain" 2>/dev/null)
-  
-  if [ -n "$result" ]; then
-    echo "Resolver: $resolver, Domain: $domain, Result: $result"
-  else
-    echo "Resolver: $resolver, Domain: $domain, Result: Query failed"
-  fi
+  result=$({ dig +short +stats "@${resolver}" "${domain}" || echo 'Query failed'; } 2>/dev/null)
+  echo "Resolver: ${resolver}, Domain: ${domain}, Result: ${result}"
 }
 
 # Main loop
 while true; do
-  for resolver in "${DNS_RESOLVERS[@]}"; do
+  for resolver in "${RESOLVERS[@]}"; do
     for domain in "${DOMAINS[@]}"; do
       # Run queries in parallel for better speed
       (
-        query_dns "$resolver" "$domain"
+        query_dns "${resolver}" "${domain}"
       ) &
-      
-      # Control the number of parallel queries
-      if [[ $(jobs -p | wc -l) -ge $NUM_PARALLEL_QUERIES ]]; then
-        wait
-      fi
     done
   done
   
@@ -46,5 +34,5 @@ while true; do
   wait
   
   # Sleep before the next iteration
-  sleep $LOOP_DELAY
+  sleep "${LOOP_DELAY}"
 done
