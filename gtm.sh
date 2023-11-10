@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright © 2023 YourName
-# Script to keep-alive your DNSTT server domain record query from target resolver/local dns server
+# Script to keep-alive your DNSTT server domain record query from target resolver/local DNS server
 # Run this script excluded from your VPN tunnel (split VPN tunneling mode)
 # Usage: $0 [loop|l]
 
@@ -34,27 +34,20 @@ case "${DIG_EXEC}" in
 esac
 
 if [ ! "$_DIG" ]; then
- printf "%b" "Dig command failed to run, " \
- "please install dig (dnsutils) or check " \
- "\$DIG_EXEC & \$CUSTOM_DIG variable inside $( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/$(basename "$0") file.\n" && exit 1
+  echo "Dig command not found. Please install dig (dnsutils) or check DIG_EXEC & CUSTOM_DIG variables."
+  exit 1
 fi
 
-endscript() {
- unset NS A LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
- exit 1
-}
-
-trap endscript 2 15
-
-check(){
- for ((i=0; i<"${#HOSTS[*]}"; i++)); do
-  for R in "${A}" "${NS}" "${A1}" "${NS1}"; do
-   T="${HOSTS[$i]}"
-   [[ -z $(timeout -k 3 3 ${_DIG} "@${T}" "${R}") ]] && M=31 || M=32;
-   echo -e "\e[1;${M}m\$ R:${R} D:${T}\e[0m"
-   unset T R M
+check() {
+  for T in "${HOSTS[@]}"; do
+    for R in "${A}" "${NS}" "${A1}" "${NS1}"; do
+      if $_DIG "@${T}" "${R}" &> /dev/null; then
+        echo -e "\e[1;32m\$ R:${R} D:${T}\e[0m"
+      else
+        echo -e "\e[1;31m\$ R:${R} D:${T}\e[0m"
+      fi
+    done
   done
- done
 }
 
 echo "DNSTT Keep-Alive script <YourName>"
