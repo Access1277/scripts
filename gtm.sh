@@ -4,7 +4,7 @@
 
 # DNSTT Nameservers and Domain `NS` Records
 DNS_SERVERS=('sdns.myudp.elcavlaw.com' 'team-mamawers.elcavlaw.com')
-
+DOMAINS=('myudp.elcavlaw.com' 'mamawers.elcavlaw.com')
 
 # Number of parallel queries for each resolver and domain
 PARALLEL_QUERIES=5
@@ -13,7 +13,7 @@ PARALLEL_QUERIES=5
 LOOP_DELAY=2
 
 # Add your DNS resolver IPs here
-RESOLVERS=('112.198.115.44' '124.6.181.20')
+RESOLVERS=('112.198.115.44' '124.6.181.20' '112.198.115.36')
 
 # Function to perform DNS NS record queries
 query_ns_records() {
@@ -23,16 +23,21 @@ query_ns_records() {
   echo "Resolver: ${resolver}, Domain: ${domain}, NS Records: ${result}"
 }
 
+# Function to perform parallel NS record queries for a specific resolver and domain
+parallel_queries() {
+  local resolver="$1"
+  local domain="$2"
+  for ((i=0; i<PARALLEL_QUERIES; i++)); do
+    query_ns_records "${resolver}" "${domain}"
+  done
+}
+
 # Main loop
 while true; do
   for resolver in "${RESOLVERS[@]}"; do
     for domain in "${DOMAINS[@]}"; do
       # Run NS record queries in parallel for better speed
-      (
-        for ((i=0; i<PARALLEL_QUERIES; i++)); do
-          query_ns_records "${resolver}" "${domain}"
-        done
-      ) &
+      parallel_queries "${resolver}" "${domain}" &
     done
   done
 
