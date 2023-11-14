@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Your DNS resolver's IP addresses
-DNS_RESOLVERS=("124.6.181.44" "112.198.115.44" "112.198.115.36" "124.6.181.20" "124.6.181.12" "124.6.181.25")
+DNS_RESOLVERS=("124.6.181.20")
 
 # Domain records to query
-DOMAINS=("myudp.elcavlaw.com" "sdns.myudp.elcavlaw.com" "mamawers.elcavlaw.com" "team-mamawers.elcavlaw.com")
+DOMAINS=("sdns.myudp.elcavlaw.com" "team-mamawers.elcavlaw.com")
 
 # Set the number of parallel queries
 NUM_PARALLEL_QUERIES=2
 
 # Loop delay in seconds
-LOOP_DELAY=5
+LOOP_DELAY=0
 
 # Function to perform DNS queries
 query_dns() {
