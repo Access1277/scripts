@@ -1,4 +1,4 @@
-NS='sdns.myudph.elcavlaw.com 
+NS='sdns.myudph.elcavlaw.com'
 
 LOOP_DELAY=1
 
