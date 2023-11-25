@@ -1,49 +1,101 @@
 #!/bin/bash
 
-# Your DNS resolver's IP addresses
-DNS_RESOLVERS=("124.6.181.20")
+## Copyright ©UDPTeam
 
-# Domain records to query
-DOMAINS=("sdns.myudp.elcavlaw.com" "team-mamawers.elcavlaw.com")
+## Discord: https://discord.gg/civ3
 
-# Set the number of parallel queries
-NUM_PARALLEL_QUERIES=2
+## Script to keep-alive your DNSTT server domain record query from target resolver/local dns server
 
-# Loop delay in seconds
-LOOP_DELAY=0
+## Run this script excluded from your VPN tunnel (split VPN tunneling mode)
 
-# Function to perform DNS queries
-query_dns() {
-  local resolver="$1"
-  local domain="$2"
-  
-  result=$(dig +short @"$resolver" "$domain" 2>/dev/null)
-  if [ $? -eq 0 ] && [ -n "$result" ]; then
-    echo "Resolver: $resolver, Domain: $domain, Result: $result"
-  else
-    echo "Resolver: $resolver, Domain: $domain, Result: Query failed"
-  fi
+## run command: ./globe-Multi.sh l
+
+## Repeat dig command loop time (seconds) (positive integer only)
+
+LOOP_DELAY=1
+
+## Define the aligned nameservers and hosts
+
+declare -A SERVERS=(
+    ["sdns.myudp.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
+    ["sdns.myudp1.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
+    ["sdns.myudph.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
+    ["ns-sgfree.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
+    
+)
+
+## Linux' dig command executable filepath
+## Select value: "CUSTOM|C" or "DEFAULT|D"
+
+DIG_EXEC="DEFAULT"
+
+## if set to CUSTOM, enter your custom dig executable path here
+
+CUSTOM_DIG=/data/data/com.termux/files/home/go/bin/fastdig
+
+######################################
+######################################
+######################################
+######################################
+######################################
+
+VER=0.1
+
+case "${DIG_EXEC}" in
+DEFAULT|D)
+    _DIG="$(command -v dig)"
+    ;;
+CUSTOM|C)
+    _DIG="${CUSTOM_DIG}"
+    ;;
+esac
+
+if [ ! $(command -v ${_DIG}) ]; then
+    printf "Dig command failed to run, please install dig (dnsutils) or check DIG_EXEC & CUSTOM_DIG variables inside $( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/$(basename "$0") file.\n"
+    exit 1
+fi
+
+endscript() {
+    unset LOOP_DELAY SERVERS _DIG DIG_EXEC T R M
+    exit 1
 }
 
-# Main loop
-while true; do
-  for resolver in "${DNS_RESOLVERS[@]}"; do
-    for domain in "${DOMAINS[@]}"; do
-      # Run queries in parallel for better speed
-      {
-        query_dns "$resolver" "$domain"
-      } &
-      
-      # Control the number of parallel queries
-      if [[ $(jobs -p | wc -l) -ge $NUM_PARALLEL_QUERIES ]]; then
-        wait
-      fi
+trap endscript 2 15
+
+check() {
+    for server in "${!SERVERS[@]}"; do
+        for host in ${SERVERS["$server"]}; do
+            T="${host}"
+            R="${server}"
+            
+            # Add ping and host lookup
+            ping -c 1 "${T}" &  # Ping the nameserver in the background
+            host "${R}" &  # Host lookup in the background
+            
+            timeout -k 3 3 ${_DIG} @${T} "${R}"  # Remove the domain name
+            if [ $? -eq 0 ]; then
+                M=32
+            else
+                M=31
+            fi
+            echo -e "\e[${M}m:${R} D:${T}\e[0m"
+        done
     done
-  done
-  
-  # Wait for all parallel queries to complete
-  wait
-  
-  # Sleep before the next iteration
-  sleep $LOOP_DELAY
+}
+
+echo "DNSTT Keep-Alive script <Discord @civ3>"
+echo "DNS List:"
+for server in "${!SERVERS[@]}"; do
+    echo -e "\e[34m${server}\e[0m -> ${SERVERS["$server"]}"
+done
+echo "CTRL + C to close script"
+
+if [ "${LOOP_DELAY}" -eq 1 ]; then
+    let "LOOP_DELAY++"
+fi
+
+while true; do
+    check
+    echo '.--. .-.. . .- ... .     .-- .- .. -'
+    sleep ${LOOP_DELAY}
 done
