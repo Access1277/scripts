@@ -1,9 +1,5 @@
 NS='sdns.myudph.elcavlaw.com 
-NS1='sdns.myudph.elcavlaw.com'
-NS2='sdns.myudph.elcavlaw.com'
-NS3='sdns.myudph.elcavlaw.com'
-NS4='sdns.myudph.elcavlaw.com'
-NS5='sdns.myudph.elcavlaw.com'
+
  
 
 LOOP_DELAY=1
