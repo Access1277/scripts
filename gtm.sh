@@ -18,12 +18,7 @@ LOOP_DELAY=1
 
 declare -A SERVERS=(
     ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.12"
+    
 )
 
 ## Linux' dig command executable filepath
