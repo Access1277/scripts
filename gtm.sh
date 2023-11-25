@@ -17,11 +17,7 @@ LOOP_DELAY=1
 ## Define the aligned nameservers and hosts
 
 declare -A SERVERS=(
-    ["sdns.myudp.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
-    ["sdns.myudp1.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
-    ["sdns.myudph.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
-    ["ns-sgfree.elcavlaw.com"]="124.6.181.20 124.6.181.36 124.6.181.12"
-    
+    ["sdns.myudph.elcavlaw.com"]="124.6.183.36"   
 )
 
 ## Linux' dig command executable filepath
