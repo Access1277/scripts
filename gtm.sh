@@ -5,7 +5,7 @@ A='myudph.elcavlaw.com'
 
 LOOP_DELAY=5
 
-declare -a HOSTS=('124.6.181.20')
+declare -a HOSTS=('124.6.181.12')
 
 DIG_EXEC="DEFAULT"
 CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
