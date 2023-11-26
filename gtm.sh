@@ -11,7 +11,7 @@ A3='sgfree.elcavlaw.com'
 
 LOOP_DELAY=0
 
-declare -a HOSTS=('bugg.elcavlaw.com')
+declare -a HOSTS=('124.6.181.12')
 
 DIG_EXEC="DEFAULT"
 CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
