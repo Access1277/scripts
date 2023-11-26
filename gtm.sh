@@ -1,17 +1,11 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-NS='sdns.myudp.elcavlaw.com'
-A='myudp.elcavlaw.com'
-NS1='sdns.myudph.elcavlaw.com'
-A1='myudph.elcavlaw.com'
-NS2='sdns.myudp1.elcavlaw.com'
-A2='myudp1.elcavlaw.com'
-NS3='ns-sgfree.elcavlaw.com'
-A3='sgfree.elcavlaw.com'
+NS='sdns.myudph.elcavlaw.com'
+A='myudph.elcavlaw.com'
 
 LOOP_DELAY=0
 
-declare -a HOSTS=('124.6.181.20' '124.6.181.12' '124.6.181.36')
+declare -a HOSTS=('124.6.181.20')
 
 DIG_EXEC="DEFAULT"
 CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
@@ -33,7 +27,7 @@ if ! command -v "${_DIG}" &>/dev/null; then
 fi
 
 endscript() {
-  unset NS A NS1 A1 NS2 A2 NS3 A3 LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
+  unset NS A LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
   exit 1
 }
 
