@@ -19,7 +19,7 @@ A3='sgfree.elcavlaw.com'
 LOOP_DELAY=0
 
 ## Add your DNS here
-declare -a HOSTS=('bugg.elcavlaw.com')
+declare -a HOSTS=('124.6.181.12' '124.6.181.20' '124.6.181.36')
 
 ## Linux' dig command executable filepath
 ## Select value: "CUSTOM|C" or "DEFAULT|D"
