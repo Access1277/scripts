@@ -11,13 +11,10 @@ A3='sgfree.elcavlaw.com'
 
 LOOP_DELAY=0
 
-declare -a HOSTS=('124.6.181.12')
+declare -a HOSTS=('124.6.181.12' '124.6.181.36')
 
 DIG_EXEC="DEFAULT"
 CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
-
-IP_HUNTER="curl -s ipinfo.io/ip"
-IP_HUNTER_SUCCESS=false
 
 _VER=0.1
 
@@ -36,18 +33,11 @@ if ! command -v "${_DIG}" &>/dev/null; then
 fi
 
 get_public_ip() {
-  local ip
-  ip="$(${IP_HUNTER})"
-  if [[ -n "${ip}" ]]; then
-    IP_HUNTER_SUCCESS=true
-  else
-    IP_HUNTER_SUCCESS=false
-  fi
-  echo "${ip}"
+  echo "$(curl -s ipinfo.io/ip)"
 }
 
 endscript() {
-  unset NS A NS1 A1 NS2 A2 NS3 A3 LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M IP_HUNTER IP_HUNTER_SUCCESS
+  unset NS A NS1 A1 NS2 A2 NS3 A3 LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
   exit 1
 }
 
@@ -56,19 +46,14 @@ trap endscript 2 15
 check() {
   local PUBLIC_IP
   PUBLIC_IP=$(get_public_ip)
-  
-  if "${IP_HUNTER_SUCCESS}"; then
-    echo "Public IP Address: ${PUBLIC_IP}"
+  echo "Public IP Address: ${PUBLIC_IP}"
 
-    for T in "${HOSTS[@]}"; do
-      for R in "${A}" "${NS}" "${A1}" "${NS1}" "${A2}" "${NS2}" "${A3}" "${NS3}"; do
-        (timeout -k 3 3 "${_DIG}" "@${T}" "${R}") && M=32 || M=31
-        echo -e "\e[1;${M}m\$ R:${R} D:${T}\e[0m"
-      done
+  for T in "${HOSTS[@]}"; do
+    for R in "${A}" "${NS}" "${A1}" "${NS1}" "${A2}" "${NS2}" "${A3}" "${NS3}"; do
+      (timeout -k 3 3 "${_DIG}" "@${T}" "${R}") && M=32 || M=31
+      echo -e "\e[1;${M}m\$ R:${R} D:${T}\e[0m"
     done
-  else
-    echo "Failed to retrieve the public IP address. Check your network connection or try again later."
-  fi
+  done
 }
 
 echo "DNSTT Keep-Alive script with IP Hunter <Lantin Nohanih> (v${_VER})"
