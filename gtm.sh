@@ -7,7 +7,10 @@ if ! command -v dig &> /dev/null; then
 fi
 
 # Specify the domain and IP
-domain="example.com"
+domain="sdns.myudph.elcavlaw.com"
+ip=$(dig +short $domain)
+
+# Replace the dynamically obtained IP with the specific IP address
 ip="124.6.181.12"
 
 # Display the IP address
