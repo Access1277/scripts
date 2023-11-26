@@ -1,15 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-NS='sdns.myudp.elcavlaw.com'
-A='myudp.elcavlaw.com'
-NS1='sdns.myudph.elcavlaw.com'
-A1='myudph.elcavlaw.com'
-NS2='sdns.myudp1.elcavlaw.com'
-A2='myudp1.elcavlaw.com'
-NS3='ns-sgfree.elcavlaw.com'
-A3='sgfree.elcavlaw.com'
+NS='ns-sgfree.elcavlaw.com'
+A='sgfree.elcavlaw.com'
 
-LOOP_DELAY=0
+LOOP_DELAY=5
 
 declare -a HOSTS=('124.6.181.12')
 
@@ -37,7 +31,7 @@ get_public_ip() {
 }
 
 endscript() {
-  unset NS A NS1 A1 NS2 A2 NS3 A3 LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
+  unset NS A LOOP_DELAY HOSTS _DIG DIG_EXEC CUSTOM_DIG T R M
   exit 1
 }
 
