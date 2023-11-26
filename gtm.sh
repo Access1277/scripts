@@ -31,7 +31,7 @@ DIG_EXEC="DEFAULT"
 ## if set to CUSTOM, enter your custom dig executable path here
 CUSTOM_DIG="/data/data/com.termux/files/usr/bin/dig"
 
-_VER=0.2
+_VER=0.3
 
 case "${DIG_EXEC}" in
   DEFAULT|D)
