@@ -42,7 +42,7 @@ case "${DIG_EXEC}" in
     ;;
 esac
 
-if [ ! $(command -v ${_DIG}) ]; then
+if [ ! "$(${_DIG} --version)" ]; then
   printf "%b" "Dig command failed to run, " \
     "please install busybox and dnsutils or check " \
     "\$DIG_EXEC & \$CUSTOM_DIG variable inside $( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/$(basename "$0") file.\n" && exit 1
@@ -68,7 +68,7 @@ echo "DNSTT Keep-Alive script <Lantin Nohanih> (v${_VER})"
 echo -e "DNS List: [\e[1;34m${HOSTS[*]}\e[0m]"
 echo "CTRL + C to close script"
 
-case "${@}" in
+case "${1:-}" in
   loop|l)
     echo "Script loop: ${LOOP_DELAY} seconds"
     while true; do
