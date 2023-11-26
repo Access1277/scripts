@@ -7,11 +7,11 @@ if ! command -v dig &> /dev/null; then
 fi
 
 # Specify the domain and IP
-domain="sdns.myudph.elcavlaw.com"
-ip=$(dig +short $domain)
+domain="example.com"
+ip="124.6.181.12"
 
 # Display the IP address
-if [ -z "124.6.181.12" ]; then
+if [ -z "$ip" ]; then
     echo "No IP address found for $domain."
 else
     echo "IP address for $domain: $ip"
