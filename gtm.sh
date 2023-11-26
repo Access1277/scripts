@@ -3,7 +3,7 @@
 NS='sdns.myudph.elcavlaw.com'
 A='myudph.elcavlaw.com'
 
-LOOP_DELAY=0
+LOOP_DELAY=5
 
 declare -a HOSTS=('124.6.181.20')
 
