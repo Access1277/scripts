@@ -9,14 +9,14 @@ A2='myudp1.elcavlaw.com'
 NS3='ns-sgfree.elcavlaw.com'
 A3='sgfree.elcavlaw.com'
 
-LOOP_DELAY=1
+LOOP_DELAY=5
 
 declare -a HOSTS=('124.6.181.12' '124.6.181.36')
 
 DIG_EXEC="DEFAULT"
 CUSTOM_DIG="/data/data/com.termux/files/home/go/bin/fastdig"
 
-_VER=0.2
+_VER=0.1
 
 case "${DIG_EXEC}" in
   DEFAULT|D)
@@ -50,19 +50,8 @@ check() {
 
   for T in "${HOSTS[@]}"; do
     for R in "${A}" "${NS}" "${A1}" "${NS1}" "${A2}" "${NS2}" "${A3}" "${NS3}"; do
-      (timeout -k 3 3 "${_DIG}" "@${T}" "${R}" &)  # Run in background
-    done
-  done
-
-  # Wait for all background processes to finish
-  wait
-
-  # Display results
-  for ((i = 0; i < "${#HOSTS[@]}"; i++)); do
-    for R in "${A}" "${NS}" "${A1}" "${NS1}" "${A2}" "${NS2}" "${A3}" "${NS3}"; do
-      M=32  # Assume success
-      wait %1 &>/dev/null || M=31  # Check exit status
-      echo -e "\e[1;${M}m\$ R:${R} D:${HOSTS[$i]}\e[0m"
+      (timeout -k 3 3 "${_DIG}" "@${T}" "${R}") && M=32 || M=31
+      echo -e "\e[1;${M}m\$ R:${R} D:${T}\e[0m"
     done
   done
 }
